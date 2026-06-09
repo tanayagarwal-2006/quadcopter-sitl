@@ -1,0 +1,11 @@
+# Python cache
+simulator/__pycache__/
+*.pyc
+
+# Build artifacts
+flight_controller.exe
+
+# Optional
+*.log
+.vscode/
+.idea/
