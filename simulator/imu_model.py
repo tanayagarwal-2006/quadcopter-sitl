@@ -26,8 +26,8 @@ class IMUModel:
             "pos": ...,
             "vel": ...,
             "acc_world": ...,
-            "omegas": ...,
-            "q": ...
+            "body_rates": ...,
+            "quat": ...
         }
 
         returns:
@@ -45,7 +45,7 @@ class IMUModel:
             np.random.normal(0.0, self.accel_bias_walk_std, 3)
             * np.sqrt(dt))
 
-        gyro_true = truth_state["omegas"]
+        gyro_true = truth_state["body_rates"]
 
         gyro_measured = (gyro_true+ self.gyro_bias
             + np.random.normal(0.0,self.gyro_noise_std,3))
@@ -71,16 +71,12 @@ class IMUModel:
         ])
 
         gravity_world = np.array([0.0,0.0,self.g])
-
         specific_force_world = truth_state["acc_world"] - gravity_world
-
         accel_true = rotation_matrix.T @ specific_force_world
-
         accel_measured = (accel_true + self.accel_bias + 
                 np.random.normal(0.0,self.accel_noise_std,3)
             )
         
-
         return {
             "gyro": gyro_measured,
             "accel": accel_measured

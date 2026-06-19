@@ -14,4 +14,5 @@ PARAMS = {
     "k_torque": 9.80e-8,
     "max_motor_speed": 1150.0,
     "tau_motor": 0.04,
+    "k_drag":0.28
 }

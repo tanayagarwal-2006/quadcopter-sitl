@@ -13,8 +13,8 @@ def create_initial_state():
     return {
         "pos": np.zeros(3),
         "vel": np.zeros(3),
-        "omegas": np.zeros(3),
-        "q": np.array([1.0, 0.0, 0.0, 0.0]),
+        "body_rates": np.zeros(3),
+        "quat": np.array([1.0, 0.0, 0.0, 0.0]),
         "acc_world": np.zeros(3),
         "motor_actual": np.zeros(4)
     }
@@ -48,7 +48,7 @@ def main():
         current_time=tick*dt
         logger.log(current_time, state, motor_speeds)
         controller_state = build_euler_controller_packet(state)
-        packet = build_euler_packet(controller_state["angles"],controller_state["rates"])
+        packet = build_euler_packet(controller_state["euler_rad"],controller_state["body_rates"])
 
         bridge.send_packet(packet)
         motors = bridge.receive_motors()
@@ -61,8 +61,8 @@ def main():
 
         if tick % 100 == 0:
             current_time = tick * dt
-            r_deg, p_deg, y_deg = np.degrees(controller_state['angles'])
-            p_rate, q_rate, r_rate = state['omegas']
+            roll_deg, pitch_deg, yaw_deg = np.degrees(controller_state['euler_rad'])
+            p_rate, q_rate, r_rate = state['body_rates']
             px, py, pz = state['pos']
             vx, vy, vz = state['vel']
             ax, ay, az = state['acc_world']
@@ -71,7 +71,7 @@ def main():
 
             print(
                 f"{current_time:>7.2f} | "
-                f"{r_deg:>6.1f} {p_deg:>6.1f} {y_deg:>6.1f} | "
+                f"{roll_deg:>6.1f} {pitch_deg:>6.1f} {yaw_deg:>6.1f} | "
                 f"{p_rate:>6.2f} {q_rate:>6.2f} {r_rate:>6.2f} | "
                 f"{px:>6.2f} {py:>6.2f} {pz:>6.2f} | "
                 f"{vx:>6.2f} {vy:>6.2f} {vz:>6.2f} | "

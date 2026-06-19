@@ -6,11 +6,8 @@ def quat_multiply(q1, q2):
 
     return np.array([
         w1*w2 - x1*x2 - y1*y2 - z1*z2,
-
         w1*x2 + x1*w2 + y1*z2 - z1*y2,
-
         w1*y2 - x1*z2 + y1*w2 + z1*x2,
-
         w1*z2 + x1*y2 - y1*x2 + z1*w2
     ])
 
@@ -31,11 +28,12 @@ def current_drone_state(motor_speeds, prev_state, params):
     arm_length=params["arm_length"]
     k_thrust=params["k_thrust"]
     k_torque=params["k_torque"]
+    k_drag=params["k_drag"]
     max_motor_speed=params["max_motor_speed"]
 
     position = prev_state["pos"].copy()
-    angular_rate = prev_state["omegas"].copy()
-    q = prev_state["q"].copy()
+    angular_rate = prev_state["body_rates"].copy()
+    q = prev_state["quat"].copy()
     velocity = prev_state["vel"].copy()
 
     #Thrust and Torque
@@ -46,11 +44,7 @@ def current_drone_state(motor_speeds, prev_state, params):
         * dt / params["tau_motor"]
     )
 
-    motor_actual = np.clip(
-        motor_actual,
-        0.0,
-        max_motor_speed
-    )
+    motor_actual = np.clip(motor_actual,0.0,max_motor_speed)
 
     thrust = k_thrust * (motor_actual**2)
     motor_torque = k_torque * (motor_actual**2)
@@ -80,7 +74,8 @@ def current_drone_state(motor_speeds, prev_state, params):
     ])
 
     F_thrust_world=rotation_matrix@F_thrust_body
-    F_total=F_ground+F_thrust_world
+    F_drag=-k_drag*velocity
+    F_total=F_ground+F_thrust_world+F_drag
 
     acceleration=F_total/mass
 
@@ -134,18 +129,12 @@ def current_drone_state(motor_speeds, prev_state, params):
     omega_norm = np.linalg.norm(angular_rate)
 
     if omega_norm > 1e-8:
-
         theta = omega_norm * dt
-
         axis = angular_rate / omega_norm
-
         dq = np.array([
             np.cos(theta / 2.0),
-
             axis[0] * np.sin(theta / 2.0),
-
             axis[1] * np.sin(theta / 2.0),
-
             axis[2] * np.sin(theta / 2.0)
         ])
 
@@ -153,14 +142,13 @@ def current_drone_state(motor_speeds, prev_state, params):
         dq = np.array([1.0, 0.0, 0.0, 0.0])
 
     q = quat_multiply(q, dq)
-
     q /= np.linalg.norm(q)
 
     current_drone_state={
         "pos": position,
-        "omegas": angular_rate,
+        "body_rates": angular_rate,
         "vel": velocity,
-        "q": q,
+        "quat": q,
         "acc_world": acceleration,
         "motor_actual": motor_actual
     }
