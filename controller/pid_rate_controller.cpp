@@ -25,7 +25,6 @@ bool rate_controller::integral_windup_prevent(float error, float theoretical_tor
 
 vector3 rate_controller::update(const vector3& desired_rates, const vector3& measured_rates){
     vector3 torque_command;
-    //float temp_max_axis_torque=5.0f; //Temporary hardcoded fix
 
     //Hardcoded for now
     float max_x_axis_torque=3.0f;
@@ -63,9 +62,7 @@ vector3 rate_controller::update(const vector3& desired_rates, const vector3& mea
     }
 
     integral.y = constrain_to_value(integral.y,-pitch_parameters.i_max,pitch_parameters.i_max);
-
     torque_command.y = pitch_p + (pitch_parameters.ki * integral.y) + pitch_d;
-
     prev_rate.y = measured_rates.y;
 
     //Yaw
@@ -87,9 +84,6 @@ vector3 rate_controller::update(const vector3& desired_rates, const vector3& mea
     torque_command.x = constrain_to_value(torque_command.x, -max_x_axis_torque, max_x_axis_torque);
     torque_command.y = constrain_to_value(torque_command.y, -max_y_axis_torque, max_y_axis_torque);
     torque_command.z = constrain_to_value(torque_command.z, -max_z_axis_torque, max_z_axis_torque);
-         
-    /*torque_command.x /= max_x_axis_torque;
-    torque_command.y /= max_y_axis_torque;
-    torque_command.z /= max_z_axis_torque;*/    
+             
     return torque_command;
 }
