@@ -112,6 +112,9 @@ def current_drone_state(motor_speeds, prev_state, params):
         position[2] = 0.0
         velocity[2] = 0.0
 
+        if acceleration[2] > 0.0:
+            acceleration[2] = 0.0
+
     '''roll_rate, pitch_rate, yaw_rate=angular_rate
     rate_matrix=np.array(
         [
