@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import numpy as np
 
 def plot_all(logger):
     t = logger.time
@@ -87,6 +88,19 @@ def plot_all(logger):
     ax_traj.set_xlabel("North (X)")
     ax_traj.set_ylabel("East (Y)")
     ax_traj.set_zlabel("Down (Z)")
+
+    x_ptp = np.ptp(logger.x) if len(logger.x) > 0 else 0
+    y_ptp = np.ptp(logger.y) if len(logger.y) > 0 else 0
+    z_ptp = np.ptp(logger.z) if len(logger.z) > 0 else 0
+    max_range = max(x_ptp, y_ptp, z_ptp) / 2.0
+
+    mid_x = (np.max(logger.x) + np.min(logger.x)) * 0.5 if len(logger.x) > 0 else 0
+    mid_y = (np.max(logger.y) + np.min(logger.y)) * 0.5 if len(logger.y) > 0 else 0
+    mid_z = (np.max(logger.z) + np.min(logger.z)) * 0.5 if len(logger.z) > 0 else 0
+
+    ax_traj.set_xlim(mid_x - max_range, mid_x + max_range)
+    ax_traj.set_ylim(mid_y - max_range, mid_y + max_range)
+    ax_traj.set_zlim(mid_z - max_range, mid_z + max_range)
     
     ax_traj.invert_zaxis()
 
