@@ -50,7 +50,7 @@ class IMUModel:
         gyro_measured = (gyro_true+ self.gyro_bias
             + np.random.normal(0.0,self.gyro_noise_std,3))
 
-        q0, q1, q2, q3 = truth_state["q"]
+        q0, q1, q2, q3 = truth_state["quat"]
 
         rotation_matrix = np.array([
             [
