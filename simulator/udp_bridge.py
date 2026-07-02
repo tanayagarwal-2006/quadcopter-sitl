@@ -2,9 +2,7 @@ import socket
 import struct
 import numpy as np
 
-
 class SITLBridge:
-
     def __init__(
         self,
         tx_ip="127.0.0.1",
