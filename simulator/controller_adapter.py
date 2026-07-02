@@ -17,16 +17,10 @@ def quat_to_euler(q):
         2.0 * (qw*qz + qx*qy),
         1.0 - 2.0 * (qy*qy + qz*qz)
     )
-    return np.array([
-        roll,
-        pitch,
-        yaw
-    ])
+    return np.array([roll,pitch,yaw])
 
 def build_euler_controller_packet(truth_state):
     return {
-        "euler_rad": quat_to_euler(
-            truth_state["quat"]
-        ),
+        "euler_rad": quat_to_euler(truth_state["quat"]),
         "body_rates": truth_state["body_rates"]
     }
