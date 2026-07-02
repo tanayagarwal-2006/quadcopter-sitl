@@ -8,6 +8,7 @@ from packet_builder import build_euler_packet
 
 from visualizer.logger import FlightLogger
 from visualizer.plotter import plot_all
+from imu_model import IMUModel
 
 def create_initial_state():
     return {
@@ -28,6 +29,7 @@ def main():
     tick = 0
 
     logger=FlightLogger()
+    imu=IMUModel()
 
     # TABLE HEADER 
     print("\n" + "="*155)
@@ -43,12 +45,18 @@ def main():
     )
     print("="*155)
 
+    #imu_measurements=imu.update(state,dt)
+    #print(imu_measurements["accel"])
+
     while True:
         state = current_drone_state(motor_speeds,state,PARAMS)
+        imu_measurements=imu.update(state,dt)
         current_time=tick*dt
         logger.log(current_time, state, motor_speeds)
         controller_state = build_euler_controller_packet(state)
-        packet = build_euler_packet(controller_state["euler_rad"],controller_state["body_rates"])
+        yaw_angle=controller_state["euler_rad"][2]
+        #packet = build_euler_packet(controller_state["euler_rad"],controller_state["body_rates"])
+        packet = build_euler_packet(imu_measurements["gyro"],imu_measurements["accel"], yaw_angle)
 
         bridge.send_packet(packet)
         motors = bridge.receive_motors()
