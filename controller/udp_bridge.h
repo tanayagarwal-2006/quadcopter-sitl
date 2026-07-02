@@ -20,10 +20,16 @@ struct motor_payload {
 };
 
 // Packet received FROM simulator (24 bytes)
-struct state_payload {
+/*struct state_payload {
     vector3 current_angle; 
     vector3 current_rate;  
     
+};*/
+
+struct state_payload {
+    vector3 gyroscope; 
+    vector3 accelerometer; 
+    float yaw_angle;  
 };
 
 class udp_bridge {
