@@ -33,18 +33,36 @@ The project couples a Python-based 6-DOF flight dynamics simulator with a C++ fl
 - Telemetry logging
 - Graph-based visualization
 
-
-## Repository Structure
 ```
 quadcopter-sitl/
 │
-├── controller/          C++ flight controller
-├── simulator/           6-DOF flight dynamics
-├── imu/                 IMU sensor model
-├── estimation/          Attitude estimation
-├── communication/       UDP interface
-├── telemetry/           Logging and visualization
-├── tests/               Test utilities
+├── simulator/
+│   ├── physics_engine.py      # 6-DOF quadrotor dynamics
+│   ├── imu_model.py           # IMU sensor simulation
+│   ├── controller_adapter.py  # Interface to external controller
+│   ├── udp_bridge.py          # UDP communication
+│   ├── packet_builder.py      # Packet serialization
+│   ├── config.py              # Simulation parameters
+│   ├── main.py                # Simulation entry point
+│   └── visualizer/
+│       ├── logger.py
+│       └── plotter.py
+│
+├── controller/
+│   ├── angle_controller.*     # Outer-loop attitude controller
+│   ├── pid_rate_controller.*  # Inner-loop angular-rate PID
+│   ├── motor_mixer.*          # Control allocation
+│   ├── state_estimator.*      # Attitude estimation
+│   ├── udp_bridge.*           # Simulator interface
+│   └── utils.*
+│
+└── testbenches/
+    ├── roll_testbench.cpp
+    ├── pitch_testbench.cpp
+    ├── yaw_testbench.cpp
+    ├── disturbance_testbench.cpp
+    ├── wind_testbench.cpp
+    └── full_pipeline_testbench.cpp
 ```
 
 ## Current Status
