@@ -35,7 +35,9 @@ The project couples a Python-based 6-DOF flight dynamics simulator with a C++ fl
 
 
 ## Repository Structure
+```
 quadcopter-sitl/
+│
 ├── controller/          C++ flight controller
 ├── simulator/           6-DOF flight dynamics
 ├── imu/                 IMU sensor model
@@ -43,6 +45,7 @@ quadcopter-sitl/
 ├── communication/       UDP interface
 ├── telemetry/           Logging and visualization
 ├── tests/               Test utilities
+```
 
 ## Current Status
 The project is under active development.
