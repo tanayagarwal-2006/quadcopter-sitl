@@ -39,11 +39,11 @@ quadcopter-sitl/
 ├── simulator/
 │   ├── physics_engine.py      # 6-DOF quadrotor dynamics
 │   ├── imu_model.py           # IMU sensor simulation
-│   ├── controller_adapter.py  # Interface to external controller
+│   ├── controller_adapter.py  
 │   ├── udp_bridge.py          # UDP communication
-│   ├── packet_builder.py      # Packet serialization
+│   ├── packet_builder.py      
 │   ├── config.py              # Simulation parameters
-│   ├── main.py                # Simulation entry point
+│   ├── main.py                # Main simulation loop
 │   └── visualizer/
 │       ├── logger.py
 │       └── plotter.py
