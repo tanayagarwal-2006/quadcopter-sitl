@@ -57,12 +57,14 @@ quadcopter-sitl/
 │   └── utils.*
 │
 └── testbenches/
-    ├── roll_testbench.cpp
-    ├── pitch_testbench.cpp
-    ├── yaw_testbench.cpp
-    ├── disturbance_testbench.cpp
-    ├── wind_testbench.cpp
     └── full_pipeline_testbench.cpp
+    └── deprecated_tests/
+        ├── disturbance_testbench.cpp
+        └── pitch_testbench.cpp
+        ├── roll_testbench.cpp
+        └── wind_testbench.cpp
+        └── yaw_testbench.cpp
+        
 ```
 
 ## Current Status
