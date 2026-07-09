@@ -19,6 +19,8 @@ class rate_controller{
         vector3 integral;
         vector3 prev_rate;
 
+        vector3 filtered_derivative;
+
         float dt;
         
         bool integral_windup_prevent(float error, float theoretical_torque, float max_torque);

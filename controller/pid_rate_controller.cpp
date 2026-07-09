@@ -11,6 +11,8 @@ rate_controller::rate_controller(PID_parameters roll, PID_parameters pitch, PID_
 
     integral={0,0,0};
     prev_rate={0,0,0};
+
+    filtered_derivative = {0.0f, 0.0f, 0.0f};
 }
 
 bool rate_controller::integral_windup_prevent(float error, float theoretical_torque, float max_torque){
@@ -34,9 +36,13 @@ vector3 rate_controller::update(const vector3& desired_rates, const vector3& mea
     //Roll
     float roll_error = desired_rates.x-measured_rates.x;
     float roll_p = roll_parameters.kp*roll_error;
-    float roll_derivative = -(measured_rates.x - prev_rate.x)/dt;
-    float roll_d = roll_parameters.kd*roll_derivative;
+    
+    float alpha = 0.1f; 
+    float roll_raw_derivative = -(measured_rates.x - prev_rate.x) / dt;
 
+    filtered_derivative.x = (alpha * roll_raw_derivative) + ((1.0f - alpha) * filtered_derivative.x);
+    float roll_d = roll_parameters.kd * filtered_derivative.x;
+    
     float theoretical_roll_torque = roll_p+(roll_parameters.ki*integral.x)+roll_d;
 
     if(integral_windup_prevent(roll_error,theoretical_roll_torque,max_x_axis_torque)){
@@ -44,16 +50,16 @@ vector3 rate_controller::update(const vector3& desired_rates, const vector3& mea
     }
 
     integral.x = constrain_to_value(integral.x,-roll_parameters.i_max,roll_parameters.i_max);
-
     torque_command.x = roll_p + (roll_parameters.ki * integral.x) + roll_d;
-
     prev_rate.x = measured_rates.x;
 
     //Pitch
     float pitch_error = desired_rates.y-measured_rates.y;
     float pitch_p = pitch_parameters.kp*pitch_error;
-    float pitch_derivative = -(measured_rates.y - prev_rate.y)/dt;
-    float pitch_d = pitch_parameters.kd*pitch_derivative;
+    
+    float pitch_raw_derivative = -(measured_rates.y - prev_rate.y) / dt;
+    filtered_derivative.y = (alpha * pitch_raw_derivative) + ((1.0f - alpha) * filtered_derivative.y);
+    float pitch_d = pitch_parameters.kd * filtered_derivative.y;
 
     float theoretical_pitch_torque = pitch_p+(pitch_parameters.ki*integral.y)+pitch_d;
 
@@ -68,8 +74,10 @@ vector3 rate_controller::update(const vector3& desired_rates, const vector3& mea
     //Yaw
     float yaw_error = desired_rates.z - measured_rates.z;
     float yaw_p = yaw_parameters.kp * yaw_error;
-    float yaw_derivative = -(measured_rates.z - prev_rate.z) / dt;
-    float yaw_d = yaw_parameters.kd * yaw_derivative;
+    
+    float yaw_raw_derivative = -(measured_rates.z - prev_rate.z) / dt;
+    filtered_derivative.z = (alpha * yaw_raw_derivative) + ((1.0f - alpha) * filtered_derivative.z);
+    float yaw_d = yaw_parameters.kd * filtered_derivative.z;    
 
     float theoretical_yaw_torque = yaw_p + (yaw_parameters.ki * integral.z) + yaw_d;
 
