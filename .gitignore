@@ -3,7 +3,9 @@ simulator/__pycache__/
 *.pyc
 
 # Build artifacts
-flight_controller.exe
+*.o
+*.obj
+*.exe
 
 # Optional
 *.log
