@@ -10,8 +10,6 @@
 #include <string>
 #include "vector_axes.h"
 
-#pragma comment(lib, "ws2_32.lib")
-
 struct motor_payload {
     float m1_rads;
     float m2_rads;
@@ -19,16 +17,10 @@ struct motor_payload {
     float m4_rads;
 };
 
-// Packet received FROM simulator (24 bytes)
-/*struct state_payload {
-    vector3 current_angle; 
-    vector3 current_rate;  
-    
-};*/
-
 struct state_payload {
     vector3 gyroscope; 
     vector3 accelerometer; 
+    vector3 velocity;
     float yaw_angle;  
 };
 
