@@ -14,7 +14,7 @@ class SITLBridge:
         self.tx_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.rx_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.rx_socket.bind(("127.0.0.1", rx_port))
-        self.rx_socket.settimeout(0.1)
+        self.rx_socket.settimeout(1.0)
 
     def send_packet(self,packet):
         self.tx_socket.sendto(packet,self.tx_addr)
