@@ -15,7 +15,7 @@ def create_initial_state():
         "pos": np.zeros(3),
         "vel": np.zeros(3),
         "body_rates": np.zeros(3),
-        "quat": np.array([1.0, 0.0, 0.0, 0.0]),
+        "quat": np.array([1.0, 0.0, 0.0, 0.0]), 
         "acc_world": np.zeros(3),
         "motor_actual": np.zeros(4)
     }
@@ -24,7 +24,7 @@ def main():
     bridge = SITLBridge()
     state = create_initial_state()
     #motor_speeds = np.zeros(4)
-    motor_speeds = np.array([650.0, 650.0, 650.0, 650.0])
+    motor_speeds = np.array([0.0,0.0,0.0,0.0])
     dt = PARAMS["dt"]
     tick = 0
 
@@ -45,23 +45,20 @@ def main():
     )
     print("="*155)
 
-    #imu_measurements=imu.update(state,dt)
-    #print(imu_measurements["accel"])
-
     while True:
         state = current_drone_state(motor_speeds,state,PARAMS)
         imu_measurements=imu.update(state,dt)
-        current_time=tick*dt
+        current_time=(tick*dt)
         logger.log(current_time, state, motor_speeds)
         controller_state = build_euler_controller_packet(state)
         yaw_angle=controller_state["euler_rad"][2]
-        #packet = build_euler_packet(controller_state["euler_rad"],controller_state["body_rates"])
-        packet = build_euler_packet(imu_measurements["gyro"],imu_measurements["accel"], yaw_angle)
+        packet = build_euler_packet(imu_measurements["gyro"],imu_measurements["accel"],state["vel"],yaw_angle)
 
         bridge.send_packet(packet)
         motors = bridge.receive_motors()
 
         if motors is None:
+            print("Simulation finished.")
             plot_all(logger)
             break
 
