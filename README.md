@@ -44,7 +44,7 @@ The project couples a Python-based 6-DOF flight dynamics simulator with a C++ fl
 ## Operating System
 The project was developed and tested on:
 - Windows 11
-The controller currently uses the Windows Sockets API (WinSock2). Consequently, the complete SITL pipeline is currently Windows-only. Porting the project to Linux would primarily require replacing the networking layer with BSD sockets.
+The controller currently uses the Windows Sockets API (WinSock2). Consequently, the complete SITL pipeline is currently Windows-only.
 
 ---
 
