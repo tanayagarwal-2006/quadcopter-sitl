@@ -3,8 +3,8 @@ from config import PARAMS
 from physics_engine import current_drone_state
 
 from udp_bridge import SITLBridge
-from controller_adapter import build_euler_controller_packet
-from packet_builder import build_euler_packet
+from controller_adapter import quat_to_euler
+from packet_builder import build_controller_packet
 
 from visualizer.logger import FlightLogger
 from visualizer.plotter import plot_all
@@ -50,9 +50,9 @@ def main():
         imu_measurements=imu.update(state,dt)
         current_time=(tick*dt)
         logger.log(current_time, state, motor_speeds)
-        controller_state = build_euler_controller_packet(state)
-        yaw_angle=controller_state["euler_rad"][2]
-        packet = build_euler_packet(imu_measurements["gyro"],imu_measurements["accel"],state["vel"],yaw_angle)
+        controller_state = quat_to_euler(state["quat"])
+        yaw_angle=controller_state[2]
+        packet = build_controller_packet(imu_measurements["gyro"],imu_measurements["accel"],state["vel"],yaw_angle)
 
         bridge.send_packet(packet)
         motors = bridge.receive_motors()
@@ -66,7 +66,7 @@ def main():
 
         if tick % 100 == 0:
             current_time = tick * dt
-            roll_deg, pitch_deg, yaw_deg = np.degrees(controller_state['euler_rad'])
+            roll_deg, pitch_deg, yaw_deg = np.degrees(controller_state)
             p_rate, q_rate, r_rate = state['body_rates']
             px, py, pz = state['pos']
             vx, vy, vz = state['vel']

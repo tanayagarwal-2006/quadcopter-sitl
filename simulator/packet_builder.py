@@ -1,6 +1,6 @@
 import struct
 
-def build_euler_packet(gyro,accel,vel,true_yaw_angle):
+def build_controller_packet(gyro,accel,vel,true_yaw_angle):
     return struct.pack(
         "<10f",
         gyro[0],
