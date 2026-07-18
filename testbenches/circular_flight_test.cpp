@@ -141,6 +141,10 @@ int main() {
         }
         
         tick_counter++;
+        if (current_time > 50.0f) {
+            std::cout << "\nFlight test complete.\n";
+            break;
+        } 
     }
     return 0;
 }
