@@ -179,7 +179,7 @@ Current assumptions include:
 - No ground effect
 - No GPS or magnetometer simulation
 
-The implemented complementary filter estimates roll and pitch using gyroscope and accelerometer measurements. To compensate for the inability of an IMU alone to distinguish gravity from translational acceleration during dynamic flight, the estimator uses simulator-derived translational acceleration. This approach is appropriate within the closed-loop simulation environment but should not be interpreted as a standalone onboard attitude estimator for real flight hardware.
+The implemented complementary filter estimates roll and pitch using gyroscope and accelerometer measurements. Because a complementary filter cannot reliably separate gravity from translational acceleration during dynamic flight, the estimator uses simulator-derived translational acceleration to compensate the accelerometer measurement before attitude estimation. This approach is suitable for a closed-loop simulation environment but relies on ground-truth simulator data and should not be interpreted as a deployable onboard state estimation algorithm. Real flight systems typically estimate attitude, velocity, and sensor biases simultaneously using sensor-fusion techniques (e.g., extended Kalman filters) together with additional sensors such as GPS, magnetometers, and barometers.
 
 ---
 
