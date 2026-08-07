@@ -79,9 +79,9 @@ int main() {
         };
 
         if (current_time >= 10.0f) {
-            float target_roll = 15.0f * (3.14159f / 180.0f);
+            float target_pitch = 15.0f * (3.14159f / 180.0f);
             float slew_rate = 5.0f * (3.14159f / 180.0f) * dt;
-            if (pilot_setpoint.y < target_roll) pilot_setpoint.y += slew_rate;
+            if (pilot_setpoint.y < target_pitch) pilot_setpoint.y += slew_rate;
         }
 
 
@@ -132,10 +132,6 @@ int main() {
         simulation_link.send_motors(out_motors);
 
         if (tick_counter % 100 == 0) {
-            float r_deg = current_angle.x * 180.0f / 3.14159f;
-            float p_deg = current_angle.y * 180.0f / 3.14159f;
-            float y_deg = current_angle.z * 180.0f / 3.14159f;
-
             if (tick_counter % 100 == 0){
                 auto deg = [](float rad)
                 {

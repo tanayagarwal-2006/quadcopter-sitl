@@ -132,10 +132,6 @@ int main() {
         simulation_link.send_motors(out_motors);
 
         if (tick_counter % 100 == 0) {
-            float r_deg = current_angle.x * 180.0f / 3.14159f;
-            float p_deg = current_angle.y * 180.0f / 3.14159f;
-            float y_deg = current_angle.z * 180.0f / 3.14159f;
-
             if (tick_counter % 100 == 0){
                 auto deg = [](float rad)
                 {
